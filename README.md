@@ -1,6 +1,10 @@
 # Group-5
-Assignment - Group 5
-Team Members:
+CPAD Assignment Repository - Group 5
+
+## Momento App
+Momento is a “To-do tasks tracker” Cross Platform application built using Flutter and Firebase to keep track of your to-do tasks.
+
+### Team Members:
 
 |Name |	Student ID|
 |-----|-----------|
