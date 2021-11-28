@@ -19,14 +19,6 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.black87,
       appBar: AppBar(
         backgroundColor: Colors.black87,
-        // title: Text(
-        //   "Todays Schedule",
-        //   style: TextStyle(
-        //     fontSize: 34,
-        //     fontWeight: FontWeight.bold,
-        //     color: Colors.white,
-        //   ),
-        // ),
         actions: [
           IconButton(
               icon: Icon(Icons.logout),
