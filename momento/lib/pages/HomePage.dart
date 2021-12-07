@@ -16,16 +16,30 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   AuthClass authClass = AuthClass();
+  bool _switchvalue = true;
   final Stream<QuerySnapshot> _todos =
       FirebaseFirestore.instance.collection('Todo').snapshots();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black87,
+      backgroundColor: _switchvalue ? Colors.black87 : Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.black87,
-        title: Text('Todo List'),
+        backgroundColor: _switchvalue ? Colors.black87 : Colors.white,
+        title: Text(
+          'Todo List',
+          style: TextStyle(
+            color: _switchvalue ? Colors.white : Colors.black87,
+          ),
+        ),
         actions: [
+          Switch(
+            value: _switchvalue,
+            onChanged: (newValue) {
+              setState(() {
+                _switchvalue = newValue;
+              });
+            },
+          ),
           IconButton(
             icon: Icon(Icons.delete, color: Colors.red),
             onPressed: () async {
@@ -41,7 +55,8 @@ class _HomePageState extends State<HomePage> {
             },
           ),
           IconButton(
-              icon: Icon(Icons.logout),
+              icon: Icon(Icons.logout,
+                  color: _switchvalue ? Colors.white : Colors.black87),
               onPressed: () async {
                 await authClass.logout();
                 Navigator.pushAndRemoveUntil(
@@ -60,7 +75,7 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: _switchvalue ? Colors.white : Colors.black87,
                 ),
               ),
             ),
@@ -69,20 +84,24 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black87,
+        backgroundColor: _switchvalue ? Colors.black87 : Colors.white,
         items: [
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.home,
                 size: 32,
-                color: Colors.white,
+                color: _switchvalue ? Colors.white : Colors.black87,
               ),
               title: Container()),
           BottomNavigationBarItem(
             icon: InkWell(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (builder) => AddTodoPage()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (builder) => AddTodoPage(
+                              switchState: _switchvalue,
+                            )));
               },
               child: Container(
                 height: 52,
@@ -99,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                 child: Icon(
                   Icons.add,
                   size: 32,
-                  color: Colors.white,
+                  color: _switchvalue ? Colors.white : Colors.black87,
                 ),
               ),
             ),
@@ -109,7 +128,7 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(
               Icons.settings,
               size: 32,
-              color: Colors.white,
+              color: _switchvalue ? Colors.white : Colors.black87,
             ),
             title: Container(),
           ),
@@ -162,6 +181,7 @@ class _HomePageState extends State<HomePage> {
                                 builder: (builder) => ViewData(
                                       todo: todo,
                                       id: id,
+                                      switchState: _switchvalue,
                                     )));
                       },
                       child: Row(
@@ -179,10 +199,10 @@ class _HomePageState extends State<HomePage> {
                                   checkColor: Color(0xff0e3e26),
                                   value: todo["isCompleted"] as bool,
                                   onChanged: (value) {
-                                    FirebaseFirestore.instance
-                                        .collection("Todo")
-                                        .doc(id)
-                                        .update({"isCompleted": value});
+                                    // FirebaseFirestore.instance
+                                    //     .collection("Todo")
+                                    //     .doc(id)
+                                    //     .update({"isCompleted": value});
                                   },
                                 ),
                               ),
@@ -199,6 +219,7 @@ class _HomePageState extends State<HomePage> {
                               iconBgColor: Colors.white,
                               iconColor: iconColor,
                               iconData: iconData,
+                              switchState: _switchvalue,
                               time: todo["date"] == null
                                   ? "No Date"
                                   : DateFormat('dd/MM/yyyy, HH:mm').format(
