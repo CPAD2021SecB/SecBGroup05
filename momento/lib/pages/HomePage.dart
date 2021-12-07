@@ -6,6 +6,7 @@ import 'package:momento/pages/SignUpPage.dart';
 import 'package:momento/pages/TodoCard.dart';
 import 'package:momento/pages/ViewData.dart';
 import 'package:intl/intl.dart';
+import 'package:grouped_list/grouped_list.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -142,92 +143,107 @@ class _HomePageState extends State<HomePage> {
                 child: CircularProgressIndicator(),
               );
             }
-            return ListView.builder(
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: (context, index) {
-                  Map<String, dynamic> todo =
-                      snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                  String id = snapshot.data!.docs[index].id;
-                  IconData iconData = Icons.list_alt_rounded;
-                  Color iconColor = Colors.black;
-                  switch (todo['category']) {
-                    case 'Work':
-                      iconData = Icons.work;
-                      iconColor = Colors.blue;
-                      break;
-                    case 'Workout':
-                      iconData = Icons.fitness_center;
-                      iconColor = Colors.yellow;
-                      break;
-                    case 'Study':
-                      iconData = Icons.school;
-                      iconColor = Colors.green;
-                      break;
-                    case 'Food':
-                      iconData = Icons.fastfood;
-                      iconColor = Colors.red;
-                      break;
-                    case 'Design':
-                      iconData = Icons.brush;
-                      iconColor = Colors.purple;
-                      break;
-                  }
-
-                  return InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (builder) => ViewData(
-                                      todo: todo,
-                                      id: id,
-                                      switchState: _switchvalue,
-                                    )));
-                      },
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Theme(
-                              child: Transform.scale(
-                                scale: 1.5,
-                                child: Checkbox(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  activeColor: Color(0xff6cf8a9),
-                                  checkColor: Color(0xff0e3e26),
-                                  value: todo["isCompleted"] as bool,
-                                  onChanged: (value) {
-                                    FirebaseFirestore.instance
-                                        .collection("Todo")
-                                        .doc(id)
-                                        .update({"isCompleted": value});
-                                  },
-                                ),
-                              ),
-                              data: ThemeData(
-                                primarySwatch: Colors.blue,
-                                unselectedWidgetColor: Color(0xff5e616a),
-                              ),
+            return Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: GroupedListView<dynamic, String>(
+                    elements: snapshot.data!.docs,
+                    groupBy: (todo) =>
+                        todo['isCompleted'] ? 'Incomplete' : 'Complete',
+                    groupHeaderBuilder: (todo) => Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text(
+                            todo['isCompleted'] ? 'Complete' : 'Incomplete',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
                             ),
                           ),
-                          TodoCard(
-                              title: todo["title"] == null
-                                  ? "No Title"
-                                  : todo["title"],
-                              iconBgColor: Colors.white,
-                              iconColor: iconColor,
-                              iconData: iconData,
-                              switchState: _switchvalue,
-                              time: todo["date"] == null
-                                  ? "No Date"
-                                  : DateFormat('dd/MM/yyyy, HH:mm').format(
-                                      DateTime.fromMillisecondsSinceEpoch(
-                                          todo["date"]))),
-                        ],
-                      ));
-                });
+                        ),
+                    indexedItemBuilder: (context, snapshot, int index) {
+                      Map<String, dynamic> todo =
+                          snapshot.data() as Map<String, dynamic>;
+                      String id = snapshot.id;
+                      IconData iconData = Icons.list_alt_rounded;
+                      Color iconColor = Colors.black;
+                      switch (todo['category']) {
+                        case 'Work':
+                          iconData = Icons.work;
+                          iconColor = Colors.blue;
+                          break;
+                        case 'Workout':
+                          iconData = Icons.fitness_center;
+                          iconColor = Colors.yellow;
+                          break;
+                        case 'Study':
+                          iconData = Icons.school;
+                          iconColor = Colors.green;
+                          break;
+                        case 'Food':
+                          iconData = Icons.fastfood;
+                          iconColor = Colors.red;
+                          break;
+                        case 'Design':
+                          iconData = Icons.brush;
+                          iconColor = Colors.purple;
+                          break;
+                      }
+
+                      return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (builder) => ViewData(
+                                          todo: todo,
+                                          id: id,
+                                          switchState: _switchvalue,
+                                        )));
+                          },
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Theme(
+                                  child: Transform.scale(
+                                    scale: 1.5,
+                                    child: Checkbox(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      activeColor: Color(0xff6cf8a9),
+                                      checkColor: Color(0xff0e3e26),
+                                      value: todo["isCompleted"] as bool,
+                                      onChanged: (value) {
+                                        FirebaseFirestore.instance
+                                            .collection("Todo")
+                                            .doc(id)
+                                            .update({"isCompleted": value});
+                                      },
+                                    ),
+                                  ),
+                                  data: ThemeData(
+                                    primarySwatch: Colors.blue,
+                                    unselectedWidgetColor: Color(0xff5e616a),
+                                  ),
+                                ),
+                              ),
+                              TodoCard(
+                                  title: todo["title"] == null
+                                      ? "No Title"
+                                      : todo["title"],
+                                  iconBgColor: Colors.white,
+                                  iconColor: iconColor,
+                                  iconData: iconData,
+                                  switchState: _switchvalue,
+                                  time: todo["date"] == null
+                                      ? "No Date"
+                                      : DateFormat('dd/MM/yyyy, HH:mm').format(
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                              todo["date"]))),
+                            ],
+                          ));
+                    }));
           }),
     );
   }
