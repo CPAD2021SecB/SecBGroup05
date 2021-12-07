@@ -199,10 +199,10 @@ class _HomePageState extends State<HomePage> {
                                   checkColor: Color(0xff0e3e26),
                                   value: todo["isCompleted"] as bool,
                                   onChanged: (value) {
-                                    // FirebaseFirestore.instance
-                                    //     .collection("Todo")
-                                    //     .doc(id)
-                                    //     .update({"isCompleted": value});
+                                    FirebaseFirestore.instance
+                                        .collection("Todo")
+                                        .doc(id)
+                                        .update({"isCompleted": value});
                                   },
                                 ),
                               ),
