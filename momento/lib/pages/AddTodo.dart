@@ -136,7 +136,8 @@ class _AddTodoPageState extends State<AddTodoPage> {
             "category": category,
             "date": DateTime.now().millisecondsSinceEpoch,
             "isCompleted": false,
-            "uid": uid
+            "uid": uid,
+            "visible": true,
           });
           Navigator.pop(context);
         },
