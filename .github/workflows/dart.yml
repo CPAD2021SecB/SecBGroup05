@@ -37,7 +37,9 @@ jobs:
 
       # Consider passing '--fatal-infos' for slightly stricter analysis.
       - name: Build Project
-        run: flutter build web
+        run: |
+          cd momento
+          flutter build web
       
   deploy:
     if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
