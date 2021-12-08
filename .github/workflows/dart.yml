@@ -12,43 +12,40 @@ on:
     branches: [ main ]
 
 jobs:
-  BuildAndDeploy:
+  Build_Deploy:
+    name: Build and Deploy
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
 
-      # Note: This workflow uses the latest stable version of the Dart SDK.
-      # You can specify other versions if desired, see documentation here:
-      # https://github.com/dart-lang/setup-dart/blob/main/README.md
-      # - uses: dart-lang/setup-dart@v1
+      # Installs node
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      # Installs firebase tools
+      - name: Install firebase tools
+        run: |
+          npm install
+          npm -g install firebase-tools
+
+
+      # Installs flutter
       - uses: subosito/flutter-action@v1
         with:
           flutter-version: '2.5.1'
-
+      
+      # Installs project dependencies
       - name: Install dependencies
         run: |
           cd momento
           flutter pub get
 
-      # Uncomment this step to verify the use of 'dart format' on each commit.
-      # - name: Verify formatting
-      #   run: dart format --output=none --set-exit-if-changed .
-
-      # Consider passing '--fatal-infos' for slightly stricter analysis.
       - name: Build Project
         run: |
           cd momento
           flutter build web
 
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-
-      - run: npm install
-
       - name: Deploy
-        run: |
-          npm -g install firebase-tools
-          firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
-
+        run: firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
