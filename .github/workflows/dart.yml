@@ -40,6 +40,17 @@ jobs:
         run: |
           cd momento
           flutter build web
+          
+      - name: Deploy Project
+        run: |
+          npm ci && npm run build
+          
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_TOKEN }}'
+          channelId: live
+          projectId: momento-cross-platform-app
 
       # Your project will need to have tests in test/ and a dependency on
       # package:test for this step to succeed. Note that Flutter projects will
