@@ -37,21 +37,16 @@ jobs:
 
       # Consider passing '--fatal-infos' for slightly stricter analysis.
       - name: Build Project
-        run: |
-          cd momento
-          flutter build web
-          
-      - name: Deploy Project
-        run: |
-          npm ci && npm run build
-          
+        run: flutter build web
+      
+  deploy:
+    if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: 'npm ci && npm run build'
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_TOKEN }}'
-          channelId: live
           projectId: momento-cross-platform-app
 
-      # Your project will need to have tests in test/ and a dependency on
-      # package:test for this step to succeed. Note that Flutter projects will
-      # want to change this to 'flutter test'.
