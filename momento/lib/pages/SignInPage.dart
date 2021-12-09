@@ -1,4 +1,5 @@
 import 'package:momento/Service/Auth_Service.dart';
+import 'package:momento/pages/ForgotPassword.dart';
 import 'package:momento/pages/SignUpPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -113,12 +114,20 @@ class _SignInPageState extends State<SignInPage> {
               SizedBox(
                 height: 10,
               ),
-              Text(
-                "Forgot Password?",
-                style: TextStyle(
-                  color: Colors.lightBlue,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+              InkWell(
+                onTap: () {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (builder) => ForgotPassword()),
+                      (route) => false);
+                },
+                child: Text(
+                  "Forgot Password?",
+                  style: TextStyle(
+                    color: Colors.lightBlue,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ],

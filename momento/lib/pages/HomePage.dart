@@ -127,26 +127,14 @@ class _HomePageState extends State<HomePage> {
                       );
                     });
               }),
-          Switch(
-            value: _switchvalue,
-            onChanged: (newValue) {
-              setState(() {
-                _switchvalue = newValue;
-              });
-            },
-          ),
           IconButton(
-            icon: Icon(Icons.delete, color: Colors.red),
+            icon: !_switchvalue
+                ? Icon(Icons.light_mode, color: Colors.yellow)
+                : Icon(Icons.dark_mode, color: Colors.yellow),
             onPressed: () async {
-              await FirebaseFirestore.instance
-                  .collection('Todo')
-                  .get()
-                  .then((value) => value.docs.forEach((element) {
-                        FirebaseFirestore.instance
-                            .collection('Todo')
-                            .doc(element.id)
-                            .delete();
-                      }));
+              setState(() {
+                _switchvalue = !_switchvalue;
+              });
             },
           ),
           IconButton(
@@ -182,13 +170,6 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: _switchvalue ? Colors.black87 : Colors.white,
         items: [
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-                size: 32,
-                color: _switchvalue ? Colors.white : Colors.black87,
-              ),
-              label: "Home"),
-          BottomNavigationBarItem(
             icon: InkWell(
               onTap: () {
                 Navigator.push(
@@ -220,12 +201,39 @@ class _HomePageState extends State<HomePage> {
             label: "Add To-do",
           ),
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.account_circle_rounded,
-                size: 32,
-                color: _switchvalue ? Colors.white : Colors.black87,
+            icon: InkWell(
+              onTap: () async {
+                await FirebaseFirestore.instance
+                    .collection('Todo')
+                    .get()
+                    .then((value) => value.docs.forEach((element) {
+                          FirebaseFirestore.instance
+                              .collection('Todo')
+                              .doc(element.id)
+                              .delete();
+                        }));
+              },
+              child: Container(
+                height: 52,
+                width: 52,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.indigoAccent,
+                      Colors.purple,
+                    ],
+                  ),
+                ),
+                child: Icon(
+                  Icons.delete,
+                  size: 32,
+                  color: _switchvalue ? Colors.white : Colors.black87,
+                ),
               ),
-              label: "User"),
+            ),
+            label: "Remove To-do",
+          ),
         ],
         showSelectedLabels: false,
         showUnselectedLabels: false,
