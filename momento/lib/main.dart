@@ -20,7 +20,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Widget currentPage = SignUpPage();
+  Widget currentPage = SignInPage();
   AuthClass authClass = AuthClass();
   final FirebaseAuth auth = FirebaseAuth.instance;
   @override

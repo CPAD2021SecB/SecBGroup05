@@ -247,7 +247,7 @@ class _HomePageState extends State<HomePage> {
               );
             }
             return Padding(
-                padding: const EdgeInsets.all(15.0),
+                padding: const EdgeInsets.all(13.0),
                 child: GroupedListView<dynamic, String>(
                     elements: snapshot.data!.docs,
                     groupBy: (todo) =>
@@ -309,7 +309,7 @@ class _HomePageState extends State<HomePage> {
                               child: Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.all(4.0),
+                                    padding: const EdgeInsets.all(2.0),
                                     child: Theme(
                                       child: Transform.scale(
                                         scale: 1.5,
