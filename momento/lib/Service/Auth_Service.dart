@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:momento/pages/HomePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class AuthClass {
   GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -14,6 +17,7 @@ class AuthClass {
   );
   FirebaseAuth auth = FirebaseAuth.instance;
   final storage = new FlutterSecureStorage();
+  ConfirmationResult? webConfirmationResult;
 
   Future<void> googleSignIn(BuildContext context) async {
     try {
@@ -114,6 +118,47 @@ class AuthClass {
       showSnackBar(context, "logged In");
     } catch (e) {
       showSnackBar(context, e.toString());
+    }
+  }
+
+  void verifyPhoneNumberDevice(
+      String phoneNumber, BuildContext context, Function setData) {
+    if (!kIsWeb)
+      verifyPhoneNumber(phoneNumber, context, setData);
+    else
+      verifyWebPhoneNumber(phoneNumber);
+  }
+
+  void signInWithPhoneNumberDevice(
+      String verificationId, String smsCode, BuildContext context) {
+    if (!kIsWeb)
+      signInWithPhoneNumber(verificationId, smsCode, context);
+    else
+      confirmCodeWeb(context, smsCode);
+  }
+
+  Future<void> verifyWebPhoneNumber(String phoneNumber) async {
+    ConfirmationResult confirmationResult =
+        await auth.signInWithPhoneNumber(phoneNumber);
+
+    webConfirmationResult = confirmationResult;
+  }
+
+  Future<void> confirmCodeWeb(
+      BuildContext context, String smsController) async {
+    if (webConfirmationResult != null) {
+      try {
+        await webConfirmationResult!.confirm(smsController);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (builder) => HomePage()),
+            (route) => false);
+      } catch (e) {
+        showSnackBar(context, 'Failed to sign in: ${e.toString()}');
+      }
+    } else {
+      showSnackBar(context,
+          'Please input sms code received after verifying phone number');
     }
   }
 

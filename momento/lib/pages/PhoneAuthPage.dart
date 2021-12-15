@@ -133,7 +133,7 @@ class _PhoneAuthPageState extends State<PhoneAuthPage> {
               ),
               InkWell(
                   onTap: () {
-                    authClass.signInWithPhoneNumber(
+                    authClass.signInWithPhoneNumberDevice(
                         verificationIdFinal, smsCode, context);
                   },
                   child: Container(
@@ -231,13 +231,13 @@ class _PhoneAuthPageState extends State<PhoneAuthPage> {
               onTap: wait
                   ? null
                   : () async {
-                      // startTimer();
+                      startTimer();
                       setState(() {
                         start = 30;
                         wait = true;
                         buttonName = "Resend";
                       });
-                      await authClass.verifyPhoneNumber(
+                      authClass.verifyPhoneNumberDevice(
                           "+91 ${phoneController.text}", context, setData);
                     },
               child: Padding(
