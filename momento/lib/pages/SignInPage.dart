@@ -1,6 +1,7 @@
 import 'package:momento/Service/Auth_Service.dart';
 import 'package:momento/pages/ForgotPassword.dart';
 import 'package:momento/pages/SignUpPage.dart';
+import 'package:momento/pages/PhoneAuthPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
@@ -60,7 +61,10 @@ class _SignInPageState extends State<SignInPage> {
               SizedBox(
                 height: 15,
               ),
-              buttonItem("assets/phone.svg", "Continue with Mobile", 30, () {}),
+              buttonItem("assets/phone.svg", "Continue with Mobile", 30, () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (builder) => PhoneAuthPage()));
+              }),
               SizedBox(
                 height: 18,
               ),
