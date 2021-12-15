@@ -121,23 +121,25 @@ class AuthClass {
     }
   }
 
-  void verifyPhoneNumberDevice(String phoneNumber, BuildContext context, Function setData) {
-      if(!kIsWeb)
-        verifyPhoneNumber(phoneNumber, context, setData);
-      else
-        verifyWebPhoneNumber(phoneNumber);
+  void verifyPhoneNumberDevice(
+      String phoneNumber, BuildContext context, Function setData) {
+    if (!kIsWeb)
+      verifyPhoneNumber(phoneNumber, context, setData);
+    else
+      verifyWebPhoneNumber(phoneNumber);
   }
 
-  void signInWithPhoneNumberDevice(String verificationId, String smsCode, BuildContext context) {
-      if(Platform.isAndroid)
-        signInWithPhoneNumber(verificationId, smsCode, context);
-      else
-        confirmCodeWeb(context, smsCode);
+  void signInWithPhoneNumberDevice(
+      String verificationId, String smsCode, BuildContext context) {
+    if (!kIsWeb)
+      signInWithPhoneNumber(verificationId, smsCode, context);
+    else
+      confirmCodeWeb(context, smsCode);
   }
 
   Future<void> verifyWebPhoneNumber(String phoneNumber) async {
-    ConfirmationResult confirmationResult = await auth.signInWithPhoneNumber(
-        phoneNumber);
+    ConfirmationResult confirmationResult =
+        await auth.signInWithPhoneNumber(phoneNumber);
 
     webConfirmationResult = confirmationResult;
   }
@@ -147,6 +149,10 @@ class AuthClass {
     if (webConfirmationResult != null) {
       try {
         await webConfirmationResult!.confirm(smsController);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (builder) => HomePage()),
+            (route) => false);
       } catch (e) {
         showSnackBar(context, 'Failed to sign in: ${e.toString()}');
       }
@@ -160,5 +166,4 @@ class AuthClass {
     final snackbar = SnackBar(content: Text(text));
     ScaffoldMessenger.of(context).showSnackBar(snackbar);
   }
-
 }

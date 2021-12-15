@@ -231,7 +231,7 @@ class _PhoneAuthPageState extends State<PhoneAuthPage> {
               onTap: wait
                   ? null
                   : () async {
-                      // startTimer();
+                      startTimer();
                       setState(() {
                         start = 30;
                         wait = true;
