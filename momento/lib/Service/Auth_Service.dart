@@ -10,10 +10,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 class AuthClass {
   GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: [
-      'email',
-      'https://www.googleapis.com/auth/contacts.readonly',
-    ],
+    scopes: ['email'],
   );
   FirebaseAuth auth = FirebaseAuth.instance;
   final storage = new FlutterSecureStorage();
